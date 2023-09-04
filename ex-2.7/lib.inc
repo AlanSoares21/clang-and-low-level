@@ -26,9 +26,15 @@ print_string:
     syscall
     ret
 
-
 print_char:
     xor rax, rax
+    push rdi
+    lea rsi, [rsp] ; endereco onde pegar a string para escrever
+    mov rdx, 1 ; numero de bytes a escrever
+    mov rdi, 1 ; fd de std out
+    mov rax, 1 ; numero da chamada de sistema
+    syscall
+    pop rdi
     ret
 
 print_newline:

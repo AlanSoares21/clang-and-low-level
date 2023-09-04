@@ -178,29 +178,6 @@ tests=[
         lambda i, o, r: r == len(i)
          ),
 
-        Test('string_copy',
-            lambda v: """
-        section .data
-        arg1: db '""" + v + """', 0
-        arg2: times """ + str(len(v) + 1) +  """ db  66
-        section .text
-        %include "lib.inc"
-        global _start 
-        _start:
-        """ + before_call + """
-        mov rdi, arg1
-        mov rsi, arg2
-        mov rdx, """ + str(len(v) + 1) + """
-        call string_copy
-
-        """ + after_call + """
-        mov rdi, arg2 
-        call print_string
-        mov rax, 60
-        xor rdi, rdi
-        syscall""", 
-        lambda i,o,r: i == o),
-
         Test('print_char',
             lambda v:""" section .text
         %include "lib.inc"
@@ -418,8 +395,31 @@ tests=[
         mov rax, 60
         xor rdi, rdi
         syscall""", 
-        lambda i,o,r: o.find("too long") != -1 ) 
-        ]
+        lambda i,o,r: o.find("too long") != -1 ),
+
+        Test('string_copy',
+            lambda v: """
+        section .data
+        arg1: db '""" + v + """', 0
+        arg2: times """ + str(len(v) + 1) +  """ db  66
+        section .text
+        %include "lib.inc"
+        global _start 
+        _start:
+        """ + before_call + """
+        mov rdi, arg1
+        mov rsi, arg2
+        mov rdx, """ + str(len(v) + 1) + """
+        call string_copy
+
+        """ + after_call + """
+        mov rdi, arg2 
+        call print_string
+        mov rax, 60
+        xor rdi, rdi
+        syscall""", 
+        lambda i,o,r: i == o)
+    ]
 
 
 inputs= {'string_length' 
