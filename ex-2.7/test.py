@@ -1,11 +1,8 @@
 #!/usr/bin/python
-from io import StringIO
-import os
 import subprocess
 import sys
 import re
 import sys
-import traceback
 from subprocess import CalledProcessError, Popen, PIPE
 
 #-------helpers---------------
@@ -58,7 +55,7 @@ def launch( fname, seed = '' ):
     try:
         p = Popen(['./'+fname], shell=None, stdin=PIPE, stdout=PIPE)
         (output, err) = p.communicate(input=inputBytes)
-        return (output, p.returncode)
+        return (bytes.decode(output, 'ascii'), p.returncode)
     except CalledProcessError as exc:
         return (exc.output, exc.returncode)
     # except:
@@ -146,23 +143,7 @@ err_calling_convention: db "You did not respect the calling convention! Check th
 section .text
 continue:
 """
-tests=[ Test('string_length',
-             lambda v : """section .data
-        str: db '""" + v + """', 0
-        section .text
-        %include "lib.inc"
-        global _start
-        _start:
-        """ + before_call + """
-        mov rdi, str
-        call string_length
-        """ + after_call + """
-        mov rdi, rax
-        mov rax, 60
-        syscall""",
-        lambda i, o, r: r == len(i)
-         ),
-
+tests=[
         Test('print_string',
              lambda v : """section .data
         str: db '""" + v + """', 0
@@ -179,6 +160,23 @@ tests=[ Test('string_length',
         xor rdi, rdi
         syscall""", 
         lambda i,o,r: i == o),
+
+        Test('string_length',
+             lambda v : """section .data
+        str: db '""" + v + """', 0
+        section .text
+        %include "lib.inc"
+        global _start
+        _start:
+        """ + before_call + """
+        mov rdi, str
+        call string_length
+        """ + after_call + """
+        mov rdi, rax
+        mov rax, 60
+        syscall""",
+        lambda i, o, r: r == len(i)
+         ),
 
         Test('string_copy',
             lambda v: """

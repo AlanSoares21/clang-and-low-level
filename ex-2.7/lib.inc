@@ -18,7 +18,12 @@ string_length:
         ret
 
 print_string:
-    xor rax, rax
+    call string_length
+    mov rdx, rax ; numero de bytes a escrever
+    mov rsi, rdi ; enderoco da string
+    mov rdi, 1 ; fd de std out
+    mov rax, 1 ; numero da chamada de sistema
+    syscall
     ret
 
 

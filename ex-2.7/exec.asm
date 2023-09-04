@@ -7,6 +7,6 @@ section .text
 global _start
 _start:
 	mov rdi, value
-	call string_length
+	call print_string
 	mov rdi, rax
 	call exit
