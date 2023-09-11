@@ -1,3 +1,6 @@
+section .data
+keys: db '0123456789'
+
 section .text
 
 exit:
@@ -38,12 +41,47 @@ print_char:
     ret
 
 print_newline:
-    xor rax, rax
+    mov ax, 10
+    push ax
+    lea rsi, [rsp]
+    mov rdx, 1
+    mov rdi, 1
+    mov rax, 1
+    syscall
+    pop ax ; tirando o byte com o caractere de pular linha da pilha
     ret
 
-
 print_uint:
-    xor rax, rax
+    xor rcx, rcx
+    push rbx
+    xor rbx, rbx
+    mov ax, 0
+    push ax
+    mov rsi, 0xA
+    mov rax, rdi
+    .loop:
+    	    cmp rax, rsi
+	    jbe .end
+	    xor rdx, rdx
+	    div rsi
+	    mov bh, [rdx + keys] ; selecionando caractere
+	    push bx ; colocando caractere e mais um bit na stack
+	    inc rsp ; removendo ultimo caractere  
+	    inc rcx
+	    jmp .loop
+    .end:
+    mov bh, [rax + keys]
+    push bx
+    inc rcx
+    inc rsp
+    ; show number
+    lea rdi, [rsp]
+    push rcx
+    call print_string
+    pop rcx
+    add rsp, rcx ; restaurando rsp antes da funcao executar
+    add rsp, 2
+    pop rbx
     ret
 
 
