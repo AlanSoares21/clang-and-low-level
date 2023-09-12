@@ -6,7 +6,7 @@ value: db 'abcdefghij', 0
 section .text
 global _start
 _start:
-	mov rdi, 9876
-	call print_uint
+	mov rdi, -12345234121
+	call print_int
 	mov rdi, rax
 	call exit

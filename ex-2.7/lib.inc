@@ -86,8 +86,20 @@ print_uint:
 
 
 print_int:
-    xor rax, rax
-    ret
+    mov rax, rdi
+    mov rcx, 0x8000000000000000
+    and rax, rcx
+    test rax, rax
+    je .print_u_int
+    push rdi
+    mov rdi, '-'
+    call print_char
+    pop rdi
+    imul rdi, -1
+    ; and rdi, 0x7FFFFFF
+    .print_u_int:
+    	call print_uint
+    	ret
 
 string_equals:
     xor rax, rax
