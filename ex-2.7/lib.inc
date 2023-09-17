@@ -107,8 +107,22 @@ string_equals:
 
 
 read_char:
-    xor rax, rax
-    ret 
+    push rsi
+    lea rsi, [rsp]
+    mov rdi, 0
+    mov rax, 0
+    mov rdx, 1
+    syscall
+    cmp rax, 1
+    je .get_char
+    pop rax
+    mov rax, 0
+    jmp .end
+    .get_char:
+    	pop rax
+    	and rax, 0xFF
+    .end:
+	ret 
 
 read_word:
     ret
