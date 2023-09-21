@@ -125,6 +125,41 @@ read_char:
 	ret 
 
 read_word:
+    push r10
+    push r11
+    mov r10, rsi
+    mov r11, rdi
+    xor rcx, rcx
+    .reading:
+    	push rcx
+	push r11
+        call read_char
+	pop r11
+	pop rcx
+        test rax, rax
+        jz .finish
+	cmp rax, 0x10
+	je .finish
+	cmp rax, 0x20
+	je .finish
+	cmp rax, 0x9
+	je .finish
+	lea rdi, [r11 + rcx]
+	mov [rdi], al
+	inc rcx
+	cmp rcx, r10
+	jb .reading
+    .to_long:
+    	pop r11
+    	pop r10
+	mov rax, 0
+	ret
+    .finish:
+    	lea rdi, [r11 + rcx]
+    	mov qword[rdi], 0
+	mov rax, r11
+	pop r11
+	pop r10
     ret
 
 ; rdi points to a string
