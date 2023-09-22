@@ -157,6 +157,7 @@ read_word:
     .finish:
     	lea rdi, [r11 + rcx]
     	mov qword[rdi], 0
+	mov rdx, rcx
 	mov rax, r11
 	pop r11
 	pop r10
