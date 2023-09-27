@@ -166,8 +166,48 @@ read_word:
 ; rdi points to a string
 ; returns rax: number, rdx : length
 parse_uint:
-    xor rax, rax
-    ret
+    push rdi
+    call string_length
+    pop rdi
+    mov rsi, rax
+    push r11
+    push r10
+    push rbx
+    xor r10, r10
+    mov r11, 1
+    xor rcx, rcx
+    .loop:
+    	; se o contador e igual ao numero de caracteres na string 
+    	cmp rcx, rsi 
+	je .end
+    	xor rax, rax
+	; pregando caractere que sera avaliado
+	lea rbx, [rdi + rcx]
+    	mov ax, [rbx]
+	and rax, 0xFF
+	; se caractere nao e um numero, pula para o final
+	cmp al, 0x30
+	jb .end
+	cmp al, 0x39
+	ja .end
+	; convertendo characters em numeros
+	sub rax, 0x30
+	mul r11
+	add r10, rax
+	; atualizando base 10
+	mov rax, r11
+	mov r11, 10
+	mul r11
+	mov r11, rax
+        inc rcx
+	jmp .loop
+    .end:
+    	mov rax, r10
+	mov rdx, rcx
+	pop rbx
+    	pop r10
+	pop r11
+	ret
 
 ; rdi points to a string
 ; returns rax: number, rdx : length
