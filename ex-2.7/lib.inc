@@ -101,7 +101,7 @@ print_int:
     	call print_uint
     	ret
 
-string_equals:
+string_copy:
     xor rax, rax
     ret
 
@@ -246,8 +246,44 @@ parse_int:
     .end:
     	ret 
 
-
-string_copy:
-    ret
+string_equals:
+    push r10
+    push r11
+    ; tamanho da primeira string
+    push rdi
+    push rsi
+    call string_length
+    mov r10, rax
+    ; tamanho da segunda string
+    pop rdi
+    call string_length
+    mov r11, rax
+    pop rsi
+    ; se tamanho diferente, false
+    cmp r11, r10
+    jne .false
+    xor rcx, rcx
+    .loop:
+    	; verificar se o rcx nao e maior que o tamanho da string
+	cmp rcx, r10
+	je .true
+        mov ax, [rdi + rcx]
+	mov dx, [rsi + rcx]
+	and rax, 0xFF
+	and rdx, 0xFF
+	cmp ax, dx
+	jne .false
+	inc rcx
+	jmp .loop
+    .false:
+    	mov rax, 0
+	jmp .end
+    .true:
+    	mov rax, 1
+	jmp .end
+    .end:
+	pop r11
+	pop r10
+	ret
 
 

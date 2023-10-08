@@ -1,14 +1,15 @@
 %include "lib.inc"
 
 section .data
-value: db 'abcdefghij', 0
-numero: db 'dasda', 0
+value: db 'abc', 0
+numero: db 'abc', 0
 
 section .text
 global _start
 _start:
 	lea rdi, [numero]
-	call parse_uint
+	lea rsi, [value]
+	call string_equals
 	mov rdi, rax
 	call print_uint
 	call exit
