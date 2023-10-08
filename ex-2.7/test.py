@@ -445,7 +445,7 @@ inputs= {'string_length'
          'read_word_too_long'     
          : [ 'asdbaskdbaksvbaskvhbashvbasdasdads wewe', 'short' ],
          'parse_uint'           
-         : ["0", "1234567890987654321hehehey", "1" ],
+         : ["0", "1234567890987654321hehehey", "1", "1dasda" ],
          'parse_int'                
          : ["0", "1234567890987654321hehehey", "-1dasda", "-eedea", "-123123123", "1" ],
          'string_equals'            

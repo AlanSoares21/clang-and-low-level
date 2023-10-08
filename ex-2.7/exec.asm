@@ -2,7 +2,7 @@
 
 section .data
 value: db 'abcdefghij', 0
-numero: db '1234567890', 0
+numero: db 'dasda', 0
 
 section .text
 global _start

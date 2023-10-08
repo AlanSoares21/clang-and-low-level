@@ -171,49 +171,80 @@ parse_uint:
     pop rdi
     mov rsi, rax
     push r11
-    push r10
     push rbx
-    xor r10, r10
-    mov r11, 1
+    xor rax, rax
+    mov r11, 10
     xor rcx, rcx
     .loop:
     	; se o contador e igual ao numero de caracteres na string 
     	cmp rcx, rsi 
 	je .end
-    	xor rax, rax
-	; pregando caractere que sera avaliado
-	lea rbx, [rdi + rcx]
-    	mov ax, [rbx]
-	and rax, 0xFF
+	; pegando caractere que sera avaliado
+	mov bx, [rdi + rcx]
+	and rbx, 0xFF
 	; se caractere nao e um numero, pula para o final
-	cmp al, 0x30
-	jb .end
-	cmp al, 0x39
-	ja .end
+	cmp bl, 0x30
+	jb .not_a_number 
+	cmp bl, 0x39
+	ja .not_a_number 
 	; convertendo characters em numeros
-	sub rax, 0x30
+	sub rbx, 0x30
 	mul r11
-	add r10, rax
+	add rax, rbx
 	; atualizando base 10
-	mov rax, r11
-	mov r11, 10
-	mul r11
-	mov r11, rax
         inc rcx
 	jmp .loop
+    .not_a_number:
+    	; se rcx e zero
+	test rcx, rcx
+	jnz .end
+	; incrementa rdi
+	inc  rdi
+	dec rsi
+	; volta pro loop
+	jmp .loop
     .end:
-    	mov rax, r10
 	mov rdx, rcx
 	pop rbx
-    	pop r10
 	pop r11
 	ret
 
 ; rdi points to a string
 ; returns rax: number, rdx : length
 parse_int:
-    xor rax, rax
-    ret 
+    push rdi
+    call string_length
+    pop rdi
+    xor rcx, rcx
+    .find_start_number:
+        lea rsi, [rdi + rcx]
+	mov dx, [rsi]
+	and rdx, 0xFF
+	cmp rdx, 0x30
+	jb .not_a_number
+	cmp rdx, 0x39
+	ja .not_a_number
+	; achou o primeiro numero
+	jmp .positive
+    .not_a_number:
+    	cmp rdx, '-'
+	je .negative
+	inc rdi
+    	jmp .find_start_number
+    .negative:
+    	inc rdi
+	call parse_uint
+	push rdx
+	xor rdx, rdx
+	mov rsi, -1
+	imul rsi 
+	pop rdx
+	inc rdx
+	jmp .end
+   .positive:
+   	call parse_uint
+    .end:
+    	ret 
 
 
 string_copy:
