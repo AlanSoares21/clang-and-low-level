@@ -102,9 +102,36 @@ print_int:
     	ret
 
 string_copy:
+    push rbx
     xor rax, rax
-    ret
-
+    push rsi
+    push rdx
+    call string_length
+    pop rdx
+    pop rsi
+    cmp rax, 0
+    ; sem string para ser copiada
+    jle .too_long
+    cmp rax, rdx
+    ja .too_long
+    xor rcx, rcx
+    .cp:
+    	; pega o caractere da string original
+	mov bl, [rdi + rcx]
+	and rbx, 0xFF
+	lea rdx, [rsi + rcx]
+	mov [rdx], bl
+	inc rcx
+	cmp rcx, rax
+	jbe .cp
+	mov rax, rsi
+	jmp .end
+    .too_long:
+    	mov rax, 0
+    	mov [rsi], al
+    .end:
+    	pop rbx
+	ret
 
 read_char:
     push rsi
