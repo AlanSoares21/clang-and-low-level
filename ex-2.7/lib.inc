@@ -87,13 +87,10 @@ print_int:
     push rdi
     mov rdi, '-'
     call print_char
-
     pop rdi
-    imul rdi, -1
-    ; and rdi, 0x7FFFFFF
+    neg rdi
     .print_u_int:
-    	call print_uint
-    	ret
+        jmp print_uint
 
 string_copy:
     push rbx
