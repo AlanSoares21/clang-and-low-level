@@ -41,15 +41,8 @@ print_char:
     ret
 
 print_newline:
-    mov ax, 10
-    push ax
-    lea rsi, [rsp]
-    mov rdx, 1
-    mov rdi, 1
-    mov rax, 1
-    syscall
-    pop ax ; tirando o byte com o caractere de pular linha da pilha
-    ret
+    mov rdi, 10
+    jmp print_char
 
 print_uint:
     xor rcx, rcx
@@ -94,6 +87,7 @@ print_int:
     push rdi
     mov rdi, '-'
     call print_char
+
     pop rdi
     imul rdi, -1
     ; and rdi, 0x7FFFFFF
