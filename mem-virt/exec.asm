@@ -19,9 +19,11 @@ _start:
     call open_file
     push rax
     mov rdi, rax
-    call load_file_in_mem
-    mov rdi, rax
-    call print_string
+    mov rsi, [rsp + STFLAG_Size_Offset]
+    call file_stat
+;    call load_file_in_mem
+;    mov rdi, rax
+;    call print_string
     pop rdi
     call close_file
 

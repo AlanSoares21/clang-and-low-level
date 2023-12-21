@@ -8,12 +8,12 @@ numero: db 'abc', 0
 section .text
 global _start
 _start:
+	mov ax, 0xFF
+	neg ax
+	neg ax
+	mov rax, 0x01
+	neg rax
 	lea rdi, [value]
-	lea rsi, [value2]
-	mov rdx, 3 
-	call string_copy
-	mov rdi, rax
-	call print_uint
-	lea rdi, [value2]
 	call print_string
+	call print_newline
 	call exit
